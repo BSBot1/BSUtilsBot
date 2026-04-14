@@ -3,8 +3,8 @@ Configuration for Brawl Stars Telegram Bot
 """
 import os
 
-# Telegram Bot Token
-TELEGRAM_BOT_TOKEN = "8670029286:AAGf5IxiQINSwhNuSESJvbjsoTJdJ07Fihw"
+# Telegram Bot Token (from environment)
+TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 
 # Brawl Stars Server Configuration
 BRAWL_STARS_HOST = "game.brawlstarsgame.com"
