@@ -69,12 +69,12 @@ class BrawlClient:
         self._send_packet(MSG_LOGIN, 0, encrypted)
 
     def _send_friend_request(self):
-        payload = struct.pack('>BBHH', 1, 0, self.high_id, self.low_id)
+        payload = bytes([1, 0]) + self.high_id.to_bytes(2, 'big') + self.low_id.to_bytes(2, 'big')
         encrypted = self.crypto.encrypt(MSG_FRIEND, payload)
         self._send_packet(MSG_FRIEND, 0, encrypted)
 
     def _send_spectate(self):
-        payload = struct.pack('>BBHH', 0, 1, self.high_id, self.low_id)
+        payload = bytes([0, 1]) + self.high_id.to_bytes(2, 'big') + self.low_id.to_bytes(2, 'big')
         encrypted = self.crypto.encrypt(MSG_SPECTATE, payload)
         self._send_packet(MSG_SPECTATE, 0, encrypted)
 
