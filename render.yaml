@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: brawl-telegram-bot
+    env: docker
+    region: frankfurt
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        value: "8670029286:AAGf5IxiQINSwhNuSESJvbjsoTJdJ07Fihw"

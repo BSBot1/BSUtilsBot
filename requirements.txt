@@ -1,0 +1,3 @@
+python-telegram-bot==22.7
+pynacl==1.6.2
+flask==3.0.0
