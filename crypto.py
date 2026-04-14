@@ -7,6 +7,7 @@ import struct
 import hashlib
 import secrets
 from nacl import bindings
+from nacl.public import PrivateKey
 from config import SERVER_PUBLIC_KEY
 
 class Nonce:
@@ -22,7 +23,7 @@ class Nonce:
 
     def _generate_from_keys(self, keys):
         """Generate nonce from client and server public keys"""
-        combined = b''.join(k.to_bytes(32, 'little') if isinstance(k, memoryview) else k for k in keys)
+        combined = b''.join(k if isinstance(k, bytes) else bytes(k) for k in keys)
         h = hashlib.blake2b(combined, digest_size=24)
         self.bytes_array[:] = h.digest()[:24]
 
@@ -44,13 +45,12 @@ class PepperCrypto:
         # Server public key (32 bytes)
         self.server_public_key = SERVER_PUBLIC_KEY
 
-        # Generate client keypair
-        self.client_secret_key = secrets.token_bytes(32)
-        self.client_public_key = bytearray(32)
-        bindings.crypto_scalarmult_base(self.client_public_key, self.client_secret_key)
-        self.client_public_key = bytes(self.client_public_key)
+        # Generate client keypair using nacl.public.PrivateKey
+        private_key_obj = PrivateKey.generate()
+        self.client_secret_key = bytes(private_key_obj)
+        self.client_public_key = bytes(private_key_obj.public_key)
 
-        # Compute shared key
+        # Compute shared key using the raw bytes
         self.key = bindings.crypto_box_beforenm(self.server_public_key, self.client_secret_key)
 
         # Initialize nonces
